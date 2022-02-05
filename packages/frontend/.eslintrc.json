@@ -1,3 +1,8 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": ["../../.eslintrc.json", "next"],
+  "settings": {
+    "next": {
+      "rootDir": "packages/frontend/"
+    }
+  }
 }

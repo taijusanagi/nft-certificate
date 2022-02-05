@@ -20,7 +20,7 @@ export const Hero: React.VFC<HeroProps> = ({ ...props }) => {
               Certificate Your NFT Everywhere
             </Heading>
             <Text fontSize="xl" mt="4" maxW="xl" mx="auto">
-              Bring your NFT as verifiable credentials
+              Bring your NFT as portable verifiable credentials
             </Text>
           </Box>
 

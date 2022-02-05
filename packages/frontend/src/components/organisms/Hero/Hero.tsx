@@ -1,6 +1,5 @@
 import { Box, Button, Circle, Heading, Img, LightMode, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
 import React from "react";
-import { FaPlay } from "react-icons/fa";
 
 export const Hero: React.VFC = () => {
   return (
@@ -57,7 +56,6 @@ export const Hero: React.VFC = () => {
               }}
             >
               <VisuallyHidden>Play demo video</VisuallyHidden>
-              <FaPlay />
             </Circle>
           </Box>
         </Box>

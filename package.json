@@ -3,5 +3,11 @@
   "version": "0.0.1",
   "license": "MIT",
   "author": "taijusanagi",
-  "description": "This is NFTcert repository"
+  "description": "This is NFTcert repository",
+  "devDependencies": {
+    "husky": "^7.0.0"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  }
 }

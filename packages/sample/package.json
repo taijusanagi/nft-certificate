@@ -1,0 +1,7 @@
+{
+  "name": "@nftcert/sample",
+  "version": "0.0.5",
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  }
+}

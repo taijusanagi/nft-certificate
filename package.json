@@ -4,6 +4,10 @@
   "license": "MIT",
   "author": "taijusanagi",
   "description": "This is NFTcert repository",
+  "private": true,
+  "workspaces": [
+    "packages/**"
+  ],
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",

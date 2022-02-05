@@ -1,5 +1,5 @@
 import { Box, BoxProps, Button, Circle, Heading, Img, LightMode, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
-
+import NextLink from "next/link";
 export type HeroProps = BoxProps;
 
 export const Hero: React.VFC<HeroProps> = ({ ...props }) => {
@@ -26,9 +26,11 @@ export const Hero: React.VFC<HeroProps> = ({ ...props }) => {
 
           <Stack justify="center" direction={{ base: "column", md: "row" }} mt="10" mb="20">
             <LightMode>
-              <Button as="a" href="#" size="lg" colorScheme="blue" px="8" fontWeight="bold" fontSize="md">
-                Get Started
-              </Button>
+              <NextLink href="/portfolio">
+                <Button as="a" size="lg" colorScheme="blue" px="8" fontWeight="bold" fontSize="md">
+                  Get Started
+                </Button>
+              </NextLink>
             </LightMode>
           </Stack>
 

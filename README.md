@@ -1,2 +1,3 @@
-# nft-certificate
-This is NFT certificate repository
+# NFTCert
+
+This is NFTcert repository

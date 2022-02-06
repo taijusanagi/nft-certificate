@@ -28,7 +28,7 @@ export const Hero: React.VFC<HeroProps> = ({ ...props }) => {
 
           <Stack justify="center" direction={{ base: "column", md: "row" }} mt="10" mb="20">
             <LightMode>
-              <NextLink href="/portfolio">
+              <NextLink href="/collections">
                 <Button as="a" size="lg" colorScheme="blue" px="8" fontWeight="bold" fontSize="md">
                   Get Started
                 </Button>
@@ -41,24 +41,6 @@ export const Hero: React.VFC<HeroProps> = ({ ...props }) => {
               alt="Screenshot of Envelope App"
               src="https://res.cloudinary.com/chakra-ui-pro/image/upload/v1621085270/pro-website/app-screenshot-light_kit2sp.png"
             />
-            <Circle
-              size="20"
-              as="button"
-              bg="white"
-              shadow="lg"
-              color="blue.600"
-              position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate3d(-50%, -50%, 0)"
-              fontSize="xl"
-              transition="all 0.2s"
-              _groupHover={{
-                transform: "translate3d(-50%, -50%, 0) scale(1.05)",
-              }}
-            >
-              <VisuallyHidden>Play demo video</VisuallyHidden>
-            </Circle>
           </Box>
         </Box>
       </Box>

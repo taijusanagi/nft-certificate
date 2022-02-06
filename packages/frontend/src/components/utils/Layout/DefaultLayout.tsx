@@ -9,9 +9,9 @@ export interface DefaultLayoutProps {
 
 export const DefaultLayout: React.VFC<DefaultLayoutProps> = ({ children }) => {
   return (
-    <Flex minHeight={"100vh"} direction={"column"}>
+    <Flex minHeight="100vh" direction="column">
       <Header mb="48px" />
-      <Container flex={1}>{children}</Container>
+      <Container flex="1">{children}</Container>
       <Footer />
     </Flex>
   );

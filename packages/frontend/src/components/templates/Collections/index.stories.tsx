@@ -1,17 +1,17 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 
 import { mockAccount, mockAssets } from "../../../data/mock";
-import { PortfolioTemplate as Component } from "./Portfolio";
+import { CollectionsTemplate as Component } from "./Collections";
 
 export default {
-  title: "Templates/Portfolio Template",
+  title: "Templates/Collection Template",
   component: Component,
 } as ComponentMeta<typeof Component>;
 
 const Template: ComponentStory<typeof Component> = (args) => <Component {...args} />;
 
-export const PortfolioTemplate = Template.bind({});
-PortfolioTemplate.args = {
+export const CollectionTemplate = Template.bind({});
+CollectionTemplate.args = {
   accountProps: mockAccount,
   collectionProps: {
     assets: mockAssets,

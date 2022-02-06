@@ -3,16 +3,16 @@ import type { GetServerSideProps, NextPage } from "next";
 import { Network, OpenSeaPort } from "opensea-js";
 import React from "react";
 
-import { PortfolioTemplate, PortfolioTemplateProps } from "../../components/templates/Portfolio";
+import { CollectionsTemplate, CollectionsTemplateProps } from "../../components/templates/Collections";
 import { mockAccount, mockAssets } from "../../data/mock";
 
-const PortfolioPage: NextPage<PortfolioTemplateProps> = ({ accountProps, collectionProps }) => {
-  return <PortfolioTemplate accountProps={accountProps} collectionProps={collectionProps} />;
+const CollectionsPage: NextPage<CollectionsTemplateProps> = ({ accountProps, collectionProps }) => {
+  return <CollectionsTemplate accountProps={accountProps} collectionProps={collectionProps} />;
 };
 
-export default PortfolioPage;
+export default CollectionsPage;
 
-export const getServerSideProps: GetServerSideProps<PortfolioTemplateProps> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<CollectionsTemplateProps> = async ({ params }) => {
   const { address } = params as { address: string };
   let assets = mockAssets;
   if (ethers.utils.isAddress(address)) {
@@ -33,10 +33,10 @@ export const getServerSideProps: GetServerSideProps<PortfolioTemplateProps> = as
         image: asset.imageUrl,
       };
     });
-    const ens = await provider.lookupAddress(address);
-    if (ens) {
-      mockAccount.ens = ens;
-    }
+    // const ens = await provider.lookupAddress(address);
+    // if (ens) {
+    //   mockAccount.ens = ens;
+    // }
   }
   return {
     props: {

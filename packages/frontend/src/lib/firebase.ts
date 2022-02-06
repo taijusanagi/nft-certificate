@@ -22,20 +22,17 @@ export const initFirebase = () => {
       appId: "1:826681063750:web:07ea79cda5ba50733f4d47",
       measurementId: "G-P5RL06581E",
     };
-
     const firebaseConfig = firebaseProdConfig;
     initializeApp(firebaseConfig);
-
+    const auth = getAuth();
+    const firestore = getFirestore();
+    const functions = getFunctions();
+    functions.region = "asia-northeast1";
     if (process.env.NODE_ENV === "production") {
       getAnalytics();
     } else {
-      const auth = getAuth();
       connectAuthEmulator(auth, `http://localhost:${firebaseJson.emulators.auth.port}`);
-
-      const firestore = getFirestore();
       connectFirestoreEmulator(firestore, "localhost", firebaseJson.emulators.firestore.port);
-
-      const functions = getFunctions();
       connectFunctionsEmulator(functions, "localhost", firebaseJson.emulators.functions.port);
     }
   }

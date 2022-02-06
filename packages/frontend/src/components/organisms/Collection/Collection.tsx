@@ -19,8 +19,8 @@ import {
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 import html2canvas from "html2canvas";
 import React from "react";
-import ReactDOM from "react-dom";
 
+// import ReactDOM from "react-dom";
 import { Asset } from "../../../types/asset";
 import { Cert } from "../Cert";
 
@@ -48,7 +48,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
 
   const openModal = (selectedAssetIndex: number) => {
     setSelectedAssetIndex(selectedAssetIndex);
-    onOpen();
+    // onOpen();
   };
 
   return (

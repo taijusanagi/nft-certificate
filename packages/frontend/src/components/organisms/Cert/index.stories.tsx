@@ -11,9 +11,6 @@ const Template: ComponentStory<typeof Component> = (args) => <Component {...args
 
 export const Cert = Template.bind({});
 Cert.args = {
-  title: "Cert",
-  issuedBy: "0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07",
-  backgroundColor: "#1C202A",
-  textColor: "#FFFFFF",
-  image: "/mock/img/taijusanagi.png",
+  nftImage: "/mock/img/nft.png",
+  issuerAddress: "0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07",
 };

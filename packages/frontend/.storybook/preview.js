@@ -1,6 +1,8 @@
 import { AppWrapper } from "../src/components/utils/AppWapper";
 import { addDecorator } from "@storybook/react";
 
+import "../src/styles/global.scss";
+
 addDecorator((storyFn) => <AppWrapper>{storyFn()}</AppWrapper>);
 
 export const parameters = {

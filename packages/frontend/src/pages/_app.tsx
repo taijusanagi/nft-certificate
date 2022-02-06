@@ -1,3 +1,5 @@
+import "../styles/global.scss";
+
 import type { AppProps } from "next/app";
 import Error from "next/error";
 import React from "react";

@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<CollectionsTemplateProps> = 
     const response = await seaport.api.getAssets({
       owner: address,
     });
-    console.log(response.assets);
+    // console.log(response.assets);
     assets = response.assets.map((asset) => {
       return {
         tokenId: asset.tokenId as string,

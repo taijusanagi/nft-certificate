@@ -31,9 +31,9 @@ export const initFirebase = () => {
     if (process.env.NODE_ENV === "production") {
       getAnalytics();
     } else {
-      connectAuthEmulator(auth, `http://localhost:${firebaseJson.emulators.auth.port}`);
-      connectFirestoreEmulator(firestore, "localhost", firebaseJson.emulators.firestore.port);
-      connectFunctionsEmulator(functions, "localhost", firebaseJson.emulators.functions.port);
+      // connectAuthEmulator(auth, `http://localhost:${firebaseJson.emulators.auth.port}`);
+      // connectFirestoreEmulator(firestore, "localhost", firebaseJson.emulators.firestore.port);
+      // connectFunctionsEmulator(functions, "localhost", firebaseJson.emulators.functions.port);
     }
   }
 };

@@ -22,7 +22,7 @@ export const SignInByWallet: React.VFC<SignInByWalletProps> = () => {
     const signature = await signer.signMessage("login");
     const functions = getFunctions();
     const signInByWallet = httpsCallable(functions, "signInByWallet");
-    const { data } = await signInByWallet({ signature });
+    const { data } = (await signInByWallet({ signature })) as any;
     const auth = getAuth();
     const credential = await signInWithCustomToken(auth, data.customToken);
     console.log(credential);

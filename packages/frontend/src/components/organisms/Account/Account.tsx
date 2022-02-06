@@ -22,7 +22,7 @@ export const Account: React.VFC<AccountProps> = ({ image, address, ens, ...props
         pb={{ base: "6", md: "8" }}
       >
         <Avatar mt="-10" size="xl" src={image} />
-        <Box textAlign="center" pt="2" space="1">
+        <Box textAlign="center" pt="2" gap="2px">
           <Heading color="gray.800" fontSize={{ base: "lg", md: "2xl" }}>
             {ens}
           </Heading>

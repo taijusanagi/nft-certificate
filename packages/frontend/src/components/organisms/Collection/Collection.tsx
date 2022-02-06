@@ -2,6 +2,7 @@ import {
   AspectRatio,
   Box,
   BoxProps,
+  Button,
   Image,
   Modal,
   ModalBody,
@@ -15,6 +16,7 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
+import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
 import React from "react";
 
 import { Asset } from "../../../types/asset";
@@ -27,6 +29,16 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
   const [selectedAssetIndex, setSelectedAssetIndex] = React.useState(0);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const updateTwitterProfile = async () => {
+    const provider = new TwitterAuthProvider();
+
+    const auth = getAuth();
+    const result = await signInWithPopup(auth, provider);
+    if (result.providerId === "twitter.com") {
+      console.log(result);
+    }
+  };
 
   const openModal = (selectedAssetIndex: number) => {
     setSelectedAssetIndex(selectedAssetIndex);
@@ -71,6 +83,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
               draggable="false"
               fallback={<Skeleton />}
             />
+            <Button onClick={updateTwitterProfile}>Update Profile</Button>
           </ModalBody>
           <ModalFooter></ModalFooter>
         </ModalContent>

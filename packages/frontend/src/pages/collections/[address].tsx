@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import type { GetServerSideProps, NextPage } from "next";
 import { Network, OpenSeaPort } from "opensea-js";
+import React from "react";
 
 import { PortfolioTemplate, PortfolioTemplateProps } from "../../components/templates/Portfolio";
 import { mockAccount, mockAssets } from "../../data/mock";

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Hero } from "../../organisms/Hero";
 import { HomeLayout } from "../../utils/Layout";
 

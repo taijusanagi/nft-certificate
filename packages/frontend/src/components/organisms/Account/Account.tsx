@@ -1,5 +1,5 @@
 import { Avatar, Box, BoxProps, Flex, Heading, Text } from "@chakra-ui/react";
-
+import React from "react";
 export interface AccountProps extends BoxProps {
   image: string;
   address: string;

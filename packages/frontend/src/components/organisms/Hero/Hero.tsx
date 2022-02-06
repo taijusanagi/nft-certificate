@@ -1,5 +1,7 @@
 import { Box, BoxProps, Button, Circle, Heading, Img, LightMode, Stack, Text, VisuallyHidden } from "@chakra-ui/react";
 import NextLink from "next/link";
+import React from "react";
+
 export type HeroProps = BoxProps;
 
 export const Hero: React.VFC<HeroProps> = ({ ...props }) => {

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Account, AccountProps } from "../../organisms/Account";
 import { Collection, CollectionProps } from "../../organisms/Collection";
 import { DefaultLayout } from "../../utils/Layout";

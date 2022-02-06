@@ -1,4 +1,5 @@
 import { Box, BoxProps, Flex, Text } from "@chakra-ui/react";
+import React from "react";
 
 export type HeaderProps = BoxProps;
 

@@ -2,7 +2,6 @@ import {
   AspectRatio,
   Box,
   BoxProps,
-  Button,
   Image,
   Modal,
   ModalBody,

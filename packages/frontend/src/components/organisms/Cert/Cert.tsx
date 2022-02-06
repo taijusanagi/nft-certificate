@@ -1,37 +1,39 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 
 export interface CertProps {
-  nftImage: string;
-  issuerAddress: string;
+  image: string;
+  issuer: string;
 }
 
-export const Cert: React.VFC<CertProps> = ({ nftImage, issuerAddress }) => {
+export const Cert: React.VFC<CertProps> = ({ image, issuer }) => {
   return (
     <Flex
+      id="certification"
       direction="column"
       bgGradient="linear(to-br, #1C202A 0%, blue.500 100%)"
       rounded="xl"
       width="600px"
       height="314px"
-      p="4"
+      pb="4"
+      px="4"
       justifyContent="space-between"
       position="relative"
     >
       <Flex justifyContent="space-between" alignItems="center">
         <Text fontSize="md" fontWeight="medium" color="white">
-          Verifiable NFT Credential
+          Verifiable Credential
         </Text>
         <Text fontSize="sm" color="white">
-          Holder Certificate
+          NFT Holder
         </Text>
       </Flex>
-      <Box rounded="lg" mt="40px" ml="10px" w="240px" h="240px" position="absolute" className="frame">
-        <Image mx="auto" maxH="180px" src={nftImage} alt="nftImage" />
+      <Box rounded="lg" mt="50px" ml="10px" w="240px" h="240px" position="absolute" className="frame">
+        <Image mx="auto" maxH="180px" src={image} alt="nftImage" />
       </Box>
       <Flex justifyContent="end" alignItems="center">
         <Text fontSize="xs" color="white">
           Issued By: <br />
-          {issuerAddress}
+          {issuer}
         </Text>
       </Flex>
     </Flex>

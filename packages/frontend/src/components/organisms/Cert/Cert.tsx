@@ -9,8 +9,8 @@ export const Cert: React.VFC<CertProps> = ({ nftImage, issuerAddress }) => {
   return (
     <Flex
       direction="column"
-      bgGradient="linear(to-br, #1C202A 0%, blue.600 120%)"
-      rounded="2xl"
+      bgGradient="linear(to-br, #1C202A 0%, blue.500 100%)"
+      rounded="xl"
       width="600px"
       height="314px"
       p="4"
@@ -25,7 +25,7 @@ export const Cert: React.VFC<CertProps> = ({ nftImage, issuerAddress }) => {
           Holder Certificate
         </Text>
       </Flex>
-      <Box rounded="2xl" mt="40px" ml="10px" w="240px" h="240px" position="absolute" className="frame">
+      <Box rounded="lg" mt="40px" ml="10px" w="240px" h="240px" position="absolute" className="frame">
         <Image mx="auto" maxH="180px" src={nftImage} alt="nftImage" />
       </Box>
       <Flex justifyContent="end" alignItems="center">

@@ -1,15 +1,22 @@
 import { initFirebase } from "./lib/firebase";
 initFirebase();
 
-import { ethers } from "ethers";
-import { getAuth } from "firebase-admin/auth";
-import * as functions from "firebase-functions";
+interface Files {
+  [key: string]: string;
+}
 
-export const signInByWallet = functions.region("asia-northeast1").https.onCall(async (data, context) => {
-  const { signature } = data;
-  const recoveredAccount = ethers.utils.verifyMessage("login", signature);
-  const account = recoveredAccount.toLowerCase();
-  const auth = getAuth();
-  const customToken = await auth.createCustomToken(account);
-  return { customToken };
-});
+const files: Files = {
+  signInByWallet: "./handlers/signInByWallet",
+};
+
+const loadFunctions = (filesObj: Files) => {
+  Object.entries(filesObj).forEach(([key, value]) => {
+    const { FUNCTION_NAME } = process.env;
+    const shouldExport = !FUNCTION_NAME || FUNCTION_NAME.startsWith(key);
+    if (shouldExport) {
+      exports[key] = require(value);
+    }
+  });
+};
+
+loadFunctions(files);

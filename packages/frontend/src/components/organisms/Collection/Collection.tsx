@@ -16,30 +16,19 @@ import {
   Stack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
-import axios from "axios";
-import bsx from "base-x";
 import crypto from "crypto";
-import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 // import * as fs from "fs";
 import html2canvas from "html2canvas";
-import stream, { PassThrough } from "stream";
-const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-const bs58 = bsx(ALPHABET);
-
-import base64url from "base64url";
-import { ethers } from "ethers";
 // import { getFunctions, httpsCallable } from "firebase/functions";
 import React from "react";
+import stream from "stream";
 
 import { hooks, metaMask } from "../../../lib/web3-react";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pngItxt = require("png-itxt");
-
-// import ReactDOM from "react-dom";
-import { FirebaseError } from "firebase/app";
 
 import { Asset } from "../../../types/asset";
 import { User } from "../../../types/user";
@@ -53,9 +42,10 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
   const { useProvider } = hooks;
   const provider = useProvider();
 
+  const [generatedCetificationImage, setGeneratedCetificationImage] = React.useState("");
   const [selectedAssetIndex, setSelectedAssetIndex] = React.useState(0);
 
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const issue = async () => {
     const credentialId = "credentialId";
@@ -65,7 +55,6 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
     if (!provider) {
       return;
     }
-
     const auth = getAuth();
     if (!auth.currentUser) {
       return;
@@ -216,7 +205,6 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
         primaryType,
       },
     };
-
     const canvas = await html2canvas(document.getElementById("certification"), {
       allowTaint: false,
       useCORS: true,
@@ -225,7 +213,6 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       height: "312",
     });
     const canvasDataURL = canvas.toDataURL();
-    console.log(canvasDataURL);
     const [prefix, file] = canvasDataURL.split(",");
     const fileBuffer = Buffer.from(file, "base64");
     const data = await new Promise(function (resolve) {
@@ -241,13 +228,12 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       readable.push(fileBuffer);
       readable.push(null);
     });
-    console.log(`${prefix},${data}`);
+    setGeneratedCetificationImage(`${prefix},${data}`);
   };
 
   const openModal = (selectedAssetIndex: number) => {
     setSelectedAssetIndex(selectedAssetIndex);
-    issue();
-    // onOpen();
+    onOpen();
   };
 
   return (
@@ -255,7 +241,6 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       <Box position="absolute" opacity="0" left="-600">
         <Cert image={assets[selectedAssetIndex].image} issuer={"0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07"} />
       </Box>
-      {/* <Button onClick={issue}>Issue</Button> */}
       <SimpleGrid columns={{ base: 3, lg: 4 }} gap="4">
         {assets.map((asset, i) => (
           <Stack key={i} spacing="4">
@@ -273,7 +258,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
           </Stack>
         ))}
       </SimpleGrid>
-      {/* <Modal
+      <Modal
         isOpen={isOpen}
         onClose={onClose}
         isCentered
@@ -283,14 +268,18 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Issue Verifiable Credential</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Button onClick={issue}>Issue</Button>
+            {generatedCetificationImage && <Image src={generatedCetificationImage} alt="generatedCetificationImage" />}
           </ModalBody>
-          <ModalFooter></ModalFooter>
+          <ModalFooter>
+            <Button colorScheme="green" onClick={issue}>
+              Issue
+            </Button>
+          </ModalFooter>
         </ModalContent>
-      </Modal> */}
+      </Modal>
     </Box>
   );
 };

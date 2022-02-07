@@ -19,8 +19,15 @@ import {
 import crypto from "crypto";
 import { getAuth } from "firebase/auth";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
-// import * as fs from "fs";
 import html2canvas from "html2canvas";
+// const IPFS = require("ipfs-mini");
+// const ipfs = new IPFS({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
+import createClient from "ipfs-http-client";
+const ipfs = createClient({
+  host: "ipfs.infura.io",
+  port: 5001,
+  protocol: "https",
+});
 // import { getFunctions, httpsCallable } from "firebase/functions";
 import React from "react";
 import stream from "stream";
@@ -213,8 +220,8 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       height: "312",
     });
     const canvasDataURL = canvas.toDataURL();
-    const [prefix, file] = canvasDataURL.split(",");
-    const fileBuffer = Buffer.from(file, "base64");
+    const [prefix, pngBase64] = canvasDataURL.split(",");
+    const pngBase64Buffer = Buffer.from(pngBase64, "base64");
     const data = await new Promise(function (resolve) {
       const readable = new stream.Readable();
       const pipe = readable.pipe(pngItxt.set({ keyword: "openbadges", value: JSON.stringify(vc) }, true));
@@ -225,15 +232,31 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       pipe.on("end", () => {
         resolve(Buffer.concat(bufs).toString("base64"));
       });
-      readable.push(fileBuffer);
+      readable.push(pngBase64Buffer);
       readable.push(null);
     });
-    setGeneratedCetificationImage(`${prefix},${data}`);
+    const certDataURL = `${prefix},${data}`;
+    setGeneratedCetificationImage(certDataURL);
+    const file = dataURLtoFile(certDataURL, "cert.png");
+    const result = await ipfs.add(file);
+    console.log(result);
   };
 
   const openModal = (selectedAssetIndex: number) => {
     setSelectedAssetIndex(selectedAssetIndex);
     onOpen();
+  };
+
+  const dataURLtoFile = (dataurl, filename) => {
+    const arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   };
 
   return (

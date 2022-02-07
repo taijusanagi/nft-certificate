@@ -5,7 +5,7 @@ import "firebase/analytics";
 
 import { getAnalytics } from "firebase/analytics";
 import { getApps, initializeApp } from "firebase/app";
-import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectAuthEmulator, getAuth, inMemoryPersistence, setPersistence } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
@@ -30,10 +30,11 @@ export const initFirebase = () => {
     functions.region = "asia-northeast1";
     if (process.env.NODE_ENV === "production") {
       getAnalytics();
+      setPersistence(auth, inMemoryPersistence);
     } else {
-      // connectAuthEmulator(auth, `http://localhost:${firebaseJson.emulators.auth.port}`);
-      // connectFirestoreEmulator(firestore, "localhost", firebaseJson.emulators.firestore.port);
-      // connectFunctionsEmulator(functions, "localhost", firebaseJson.emulators.functions.port);
+      connectAuthEmulator(auth, `http://localhost:${firebaseJson.emulators.auth.port}`);
+      connectFirestoreEmulator(firestore, "localhost", firebaseJson.emulators.firestore.port);
+      connectFunctionsEmulator(functions, "localhost", firebaseJson.emulators.functions.port);
     }
   }
 };

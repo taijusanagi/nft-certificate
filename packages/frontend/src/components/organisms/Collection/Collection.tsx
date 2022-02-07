@@ -21,6 +21,7 @@ import axios from "axios";
 import bsx from "base-x";
 import crypto from "crypto";
 import { getAuth, signInWithPopup, TwitterAuthProvider } from "firebase/auth";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 // import * as fs from "fs";
 import html2canvas from "html2canvas";
 import stream, { PassThrough } from "stream";
@@ -38,7 +39,10 @@ import { hooks, metaMask } from "../../../lib/web3-react";
 const pngItxt = require("png-itxt");
 
 // import ReactDOM from "react-dom";
+import { FirebaseError } from "firebase/app";
+
 import { Asset } from "../../../types/asset";
+import { User } from "../../../types/user";
 import { Cert } from "../Cert";
 
 export interface CollectionProps extends BoxProps {
@@ -47,39 +51,30 @@ export interface CollectionProps extends BoxProps {
 
 export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => {
   const { useProvider } = hooks;
-  const canvasRef = React.createRef();
+  const provider = useProvider();
 
   const [selectedAssetIndex, setSelectedAssetIndex] = React.useState(0);
 
   // const { isOpen, onOpen, onClose } = useDisclosure();
-  const provider = useProvider();
+
   const issue = async () => {
     const credentialId = "credentialId";
     const now = "2010-01-01T19:23:24Z";
     const salt = crypto.randomBytes(32);
-
     metaMask.activate();
     if (!provider) {
       return;
     }
+
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      return;
+    }
+    const userid = auth.currentUser.uid;
+    const firestore = getFirestore();
+    const user = await getDoc(doc(firestore, "users", userid));
+    const { did } = user.data() as User;
     const signer = provider.getSigner();
-    const signature = await signer.signMessage("message");
-    const messageHash = ethers.utils.hashMessage("message");
-    const messageHashBytes = ethers.utils.arrayify(messageHash);
-    const publicKey = ethers.utils.recoverPublicKey(messageHashBytes, signature);
-    const compressedPublicKey = ethers.utils.computePublicKey(publicKey, true);
-    const compressedPublicKeyBuffer = Buffer.from(compressedPublicKey.slice(2), "hex");
-
-    const MULTIBASE_ENCODED_BASE58_IDENTIFIER = "z";
-    const SECP256K1_MULTICODEC_IDENTIFIER = 0xe7;
-    const VARIABLE_INTEGER_TRAILING_BYTE = 0x01;
-    const buffer = new Uint8Array(2 + compressedPublicKeyBuffer.length);
-    buffer[0] = SECP256K1_MULTICODEC_IDENTIFIER;
-    buffer[1] = VARIABLE_INTEGER_TRAILING_BYTE;
-    buffer.set(compressedPublicKeyBuffer, 2);
-    const key = `${MULTIBASE_ENCODED_BASE58_IDENTIFIER}${bs58.encode(buffer)}`;
-    const did = `did:key:${key}`;
-
     const EIP712Domain = [
       {
         name: "name",
@@ -98,7 +93,6 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
         type: "bytes32",
       },
     ];
-
     const types = {
       CredentialSubject: [
         {
@@ -186,16 +180,15 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
         type: "EthereumEip712Signature2021",
         created: now,
         proofPurpose: "assertionMethod",
-        verificationMethod: `${did}#${key}`,
+        verificationMethod: did,
       },
     };
-
-    const sig = await signer._signTypedData(domain, types, message);
+    const sigature = await signer._signTypedData(domain, types, message);
     const vc = {
       ...message,
       proof: {
         ...message.proof,
-        proofValue: sig,
+        proofValue: sigature,
         eip712: {
           domain,
           types: {
@@ -220,7 +213,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
             ],
           },
         },
-        primaryType: "VerifiableCredential",
+        primaryType,
       },
     };
 
@@ -232,6 +225,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       height: "312",
     });
     const canvasDataURL = canvas.toDataURL();
+    console.log(canvasDataURL);
     const [prefix, file] = canvasDataURL.split(",");
     const fileBuffer = Buffer.from(file, "base64");
     const data = await new Promise(function (resolve) {

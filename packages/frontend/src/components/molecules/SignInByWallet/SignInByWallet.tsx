@@ -1,13 +1,4 @@
 import { Button } from "@chakra-ui/react";
-import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
-import axios from "axios";
-import bsx from "base-x";
-import crypto from "crypto";
-const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-const bs58 = bsx(ALPHABET);
-
-import base64url from "base64url";
-import { ethers } from "ethers";
 import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import React from "react";
@@ -19,9 +10,21 @@ export interface SignInByWalletProps {}
 
 export const SignInByWallet: React.VFC<SignInByWalletProps> = () => {
   const { useProvider } = hooks;
-
+  const provider = useProvider();
   const signInByWallet = async () => {
-    console.log("signInByWallet");
+    metaMask.activate();
+    if (!provider) {
+      return;
+    }
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage("message");
+    const functions = getFunctions();
+    const signInByWallet = httpsCallable(functions, "signInByWallet");
+    const { data } = await signInByWallet({ signature });
+    const auth = getAuth();
+    const result = await signInWithCustomToken(auth, data.customToken);
+
+    console.log(result);
   };
 
   return (

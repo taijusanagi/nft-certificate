@@ -1,8 +1,13 @@
+import dynamic from "next/dynamic";
 import React from "react";
 
 import { Account, AccountProps } from "../../organisms/Account";
-import { Collection, CollectionProps } from "../../organisms/Collection";
+import { CollectionProps } from "../../organisms/Collection";
 import { DefaultLayout } from "../../utils/Layout";
+
+const Collection = dynamic<CollectionProps>(() => import("../../organisms/Collection").then((mod) => mod.Collection), {
+  ssr: false,
+});
 
 export interface CollectionsTemplateProps {
   accountProps: AccountProps;

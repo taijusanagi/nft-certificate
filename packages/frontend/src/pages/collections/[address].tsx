@@ -29,6 +29,7 @@ export const getServerSideProps: GetServerSideProps<CollectionsTemplateProps> = 
     assets = response.assets
       .filter((asset) => asset.imageUrl)
       .map((asset) => {
+        console.log(asset.imageUrl);
         return {
           tokenId: asset.tokenId as string,
           name: asset.name,
@@ -36,8 +37,8 @@ export const getServerSideProps: GetServerSideProps<CollectionsTemplateProps> = 
           image: asset.imageUrl,
         };
       });
-    const ens = await provider.lookupAddress(address);
-    mockAccount.ens = ens ? ens : "";
+    // const ens = await provider.lookupAddress(address);
+    mockAccount.ens = "name.ens";
   }
   return {
     props: {

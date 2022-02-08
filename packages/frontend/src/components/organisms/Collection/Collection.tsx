@@ -23,6 +23,7 @@ import html2canvas from "html2canvas";
 // const IPFS = require("ipfs-mini");
 // const ipfs = new IPFS({ host: "ipfs.infura.io", port: 5001, protocol: "https" });
 import createClient from "ipfs-http-client";
+
 const ipfs = createClient({
   host: "ipfs.infura.io",
   port: 5001,
@@ -235,12 +236,20 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       readable.push(null);
     });
     const certDataURL = `${prefix},${data}`;
+    console.log(certDataURL);
+    setGeneratedCetificationImage(certDataURL);
     const file = dataURLtoFile(certDataURL, "cert.png");
     const result = await ipfs.add(file);
     console.log(result);
   };
 
   const openModal = (selectedAssetIndex: number) => {
+    setGeneratedCetificationImage("");
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      alert("please connect your wallet");
+    }
+    console.log(selectedAssetIndex);
     setSelectedAssetIndex(selectedAssetIndex);
     onOpen();
   };
@@ -257,52 +266,72 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
     return new File([u8arr], filename, { type: mime });
   };
 
+  function download(dataurl: string, filename: string) {
+    const link = document.createElement("a");
+    link.href = dataurl;
+    link.download = filename;
+    link.click();
+  }
+
   return (
     <Box mx="auto" {...props}>
-      {selectedAssetIndex && (
-        <Box position="absolute" opacity="0" left="-600">
-          <Cert image={assets[selectedAssetIndex].image} issuer={"0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07"} />
-        </Box>
-      )}
-      <SimpleGrid columns={{ base: 3, lg: 4 }} gap="4">
-        {assets.map((asset, i) => (
-          <Stack key={i} spacing="4">
-            <Box position="relative" className="group">
-              <AspectRatio ratio={1}>
-                <Image
-                  src={asset.image}
-                  alt={asset.name}
-                  onClick={() => openModal(i)}
-                  draggable="false"
-                  fallback={<Skeleton />}
-                />
-              </AspectRatio>
+      {assets && (
+        <>
+          {selectedAssetIndex && (
+            <Box position="absolute" opacity="0" left="-600">
+              <Cert image={assets[selectedAssetIndex].image} issuer={"0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07"} />
             </Box>
-          </Stack>
-        ))}
-      </SimpleGrid>
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        motionPreset="slideInBottom"
-        scrollBehavior="inside"
-        size="lg"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Issue Verifiable Credential</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {generatedCetificationImage && <Image src={generatedCetificationImage} alt="generatedCetificationImage" />}
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="green" onClick={issue}>
-              Issue
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          )}
+          <SimpleGrid columns={{ base: 3, lg: 4 }} gap="4">
+            {assets.map((asset, i) => (
+              <Stack key={i} spacing="4">
+                <Box position="relative" className="group">
+                  <AspectRatio ratio={1}>
+                    <Image
+                      src={asset.image}
+                      alt={asset.name}
+                      onClick={() => openModal(i)}
+                      draggable="false"
+                      fallback={<Skeleton />}
+                    />
+                  </AspectRatio>
+                </Box>
+              </Stack>
+            ))}
+          </SimpleGrid>
+          <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            isCentered
+            motionPreset="slideInBottom"
+            scrollBehavior="inside"
+            size="lg"
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Issue Verifiable Credential</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                {generatedCetificationImage && (
+                  <Image src={generatedCetificationImage} alt="generatedCetificationImage" />
+                )}
+              </ModalBody>
+              <ModalFooter>
+                {!generatedCetificationImage && (
+                  <Button colorScheme="green" onClick={issue}>
+                    Issue
+                  </Button>
+                )}
+                {generatedCetificationImage && (
+                  <Button colorScheme="green" onClick={() => download(generatedCetificationImage, "cert.png")}>
+                    Download
+                  </Button>
+                )}
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </>
+      )}
     </Box>
   );
 };

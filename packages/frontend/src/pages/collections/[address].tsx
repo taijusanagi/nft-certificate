@@ -36,10 +36,8 @@ export const getServerSideProps: GetServerSideProps<CollectionsTemplateProps> = 
           image: asset.imageUrl,
         };
       });
-    // const ens = await provider.lookupAddress(address);
-    // if (ens) {
-    //   mockAccount.ens = ens;
-    // }
+    const ens = await provider.lookupAddress(address);
+    mockAccount.ens = ens ? ens : "";
   }
   return {
     props: {

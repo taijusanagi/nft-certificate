@@ -50,7 +50,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
   const provider = useProvider();
 
   const [generatedCetificationImage, setGeneratedCetificationImage] = React.useState("");
-  const [selectedAssetIndex, setSelectedAssetIndex] = React.useState(0);
+  const [selectedAssetIndex, setSelectedAssetIndex] = React.useState<undefined | number>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -213,12 +213,10 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
         primaryType,
       },
     };
-    const canvas = await html2canvas(document.getElementById("certification"), {
+    const canvas = await html2canvas(document.getElementById("certification") as any, {
       allowTaint: false,
       useCORS: true,
       backgroundColor: "rgba(0,0,0,0)",
-      width: "600",
-      height: "312",
     });
     const canvasDataURL = canvas.toDataURL();
     const [prefix, pngBase64] = canvasDataURL.split(",");
@@ -227,7 +225,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       const readable = new stream.Readable();
       const pipe = readable.pipe(pngItxt.set({ keyword: "openbadges", value: JSON.stringify(vc) }, true));
       const bufs: Buffer[] = [];
-      pipe.on("data", (chunk) => {
+      pipe.on("data", (chunk: any) => {
         bufs.push(chunk);
       });
       pipe.on("end", () => {
@@ -247,12 +245,12 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
     onOpen();
   };
 
-  const dataURLtoFile = (dataurl, filename) => {
-    const arr = dataurl.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
+  const dataURLtoFile = (dataurl: any, filename: any) => {
+    const arr = dataurl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
     while (n--) {
       u8arr[n] = bstr.charCodeAt(n);
     }
@@ -261,9 +259,11 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
 
   return (
     <Box mx="auto" {...props}>
-      <Box position="absolute" opacity="0" left="-600">
-        <Cert image={assets[selectedAssetIndex].image} issuer={"0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07"} />
-      </Box>
+      {selectedAssetIndex && (
+        <Box position="absolute" opacity="0" left="-600">
+          <Cert image={assets[selectedAssetIndex].image} issuer={"0x0730Ad49738206C0f5fdfB1C1f4448Ec9D2edb07"} />
+        </Box>
+      )}
       <SimpleGrid columns={{ base: 3, lg: 4 }} gap="4">
         {assets.map((asset, i) => (
           <Stack key={i} spacing="4">

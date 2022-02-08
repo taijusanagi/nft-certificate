@@ -25,15 +25,17 @@ export const getServerSideProps: GetServerSideProps<CollectionsTemplateProps> = 
     const response = await seaport.api.getAssets({
       owner: address,
     });
-    // console.log(response.assets);
-    assets = response.assets.map((asset) => {
-      return {
-        tokenId: asset.tokenId as string,
-        name: asset.name,
-        description: asset.description,
-        image: asset.imageUrl,
-      };
-    });
+
+    assets = response.assets
+      .filter((asset) => asset.imageUrl)
+      .map((asset) => {
+        return {
+          tokenId: asset.tokenId as string,
+          name: asset.name,
+          description: asset.description,
+          image: asset.imageUrl,
+        };
+      });
     // const ens = await provider.lookupAddress(address);
     // if (ens) {
     //   mockAccount.ens = ens;

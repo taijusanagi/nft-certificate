@@ -70,6 +70,7 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
     const firestore = getFirestore();
     const user = await getDoc(doc(firestore, "users", userid));
     const { did } = user.data() as User;
+
     const signer = provider.getSigner();
     const EIP712Domain = [
       {
@@ -236,7 +237,6 @@ export const Collection: React.VFC<CollectionProps> = ({ assets, ...props }) => 
       readable.push(null);
     });
     const certDataURL = `${prefix},${data}`;
-    setGeneratedCetificationImage(certDataURL);
     const file = dataURLtoFile(certDataURL, "cert.png");
     const result = await ipfs.add(file);
     console.log(result);
